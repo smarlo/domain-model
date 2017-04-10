@@ -28,9 +28,64 @@ public struct Money {
   public var currency : String
   
   public func convert(_ to: String) -> Money {
-    let rates:[String : Double] = ["USD": 1, "GBP": 0.5, "EUR": 1.5, "CAN": 1.25]
-    let newAmount = self.amount * (Int(rates[to]! / rates[self.currency]!))
-    return Money(amount: newAmount, currency: to)
+    var converted: Double = 0
+    switch currency {
+    case "USD":
+        switch to {
+        case "GBP":
+            converted = Double(amount) * 0.5
+        case "EUR":
+            converted = Double(amount) * 1.5
+        case "CAN":
+            converted = Double(amount) * 1.25
+        case "USD":
+            converted = Double(amount) * 1
+        default:
+            print("can only convert between USD, GBP, EUR, and CAN")
+        }
+    case "GBP":
+        switch to {
+        case "GBP":
+            converted = Double(amount) * 1
+        case "EUR":
+            converted = Double(amount) * 1.5
+        case "CAN":
+            converted = Double(amount) * 2.5
+        case "USD":
+            converted = Double(amount) * 2
+        default:
+            print("can only convert between USD, GBP, EUR, and CAN")
+        }
+    case "EUR":
+        switch to {
+        case "GBP":
+            converted = Double(amount) / 3
+        case "EUR":
+            converted = Double(amount) * 1
+        case "CAN":
+            converted = Double(amount) / 6 * 5
+        case "USD":
+            converted = Double(amount) / 1.5
+        default:
+            print("can only convert between USD, GBP, EUR, and CAN")
+        }
+    case "CAN":
+        switch to {
+        case "GBP":
+            converted = Double(amount) * 0.8
+        case "EUR":
+            converted = Double(amount) / 5 * 6
+        case "CAN":
+            converted = Double(amount) * 1
+        case "USD":
+            converted = Double(amount) * 4 / 5
+        default:
+            print("can only convert between USD, GBP, EUR, and CAN")
+        }
+    default:
+        print("can only convert between USD, GBP, EUR, and CAN")
+    }
+    return Money(amount: Int(converted), currency: to)
   }
   
   public func add(_ to: Money) -> Money {
