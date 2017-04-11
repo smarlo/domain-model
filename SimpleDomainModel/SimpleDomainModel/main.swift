@@ -96,6 +96,7 @@ public struct Money {
         return Money(amount: self.amount + to.amount, currency: self.currency)
     }
   }
+    
   public func subtract(_ from: Money) -> Money {
     if self.currency != from.currency {
       let newCurrency = self.convert(from.currency)
@@ -127,8 +128,8 @@ open class Job {
     switch self.type {
     case .Hourly(let rate):
         return Int(rate * Double(hours))
-    case .Salary(let rate):
-        return rate
+    case .Salary(let salary):
+        return salary
     }
   }
   
@@ -136,8 +137,8 @@ open class Job {
     switch self.type {
     case .Hourly(let rate):
         self.type = JobType.Hourly(rate + amt)
-    case .Salary(let rate):
-        self.type = JobType.Salary(rate + Int(amt))
+    case .Salary(let salary):
+        self.type = JobType.Salary(salary + Int(amt))
     }
   }
 }
@@ -199,21 +200,15 @@ open class Family {
   }
   
   open func haveChild(_ child: Person) -> Bool {
-    var childAdded = false
-    for member in members {
-        if member.age >= 21 {
-            members.append(Person(firstName: child.firstName, lastName: child.lastName, age: 0))
-            childAdded = true
-        }
-    }
-    return childAdded
+    self.members.append(child)
+    return true
   }
   
   open func householdIncome() -> Int {
-    var income:Int = 0
-    for person in members {
+    var income: Int = 0
+    for person in self.members {
         if person.job != nil {
-            income += person._job!.calculateIncome(2000)
+            income += (person._job?.calculateIncome(2000))!
         }
     }
     return income
